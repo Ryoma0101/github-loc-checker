@@ -1,6 +1,6 @@
 import styles from '@/app/page.module.css';
 
-export function LoadingView() {
+export function LoadingView({ message = 'リポジトリを解析中...' }) {
   return (
     <div className={styles.loadingView}>
       <header className={styles.header}>
@@ -12,7 +12,7 @@ export function LoadingView() {
 
       <div className={styles.loadingContent}>
         <div className={styles.spinner}></div>
-        <p className={styles.loadingText}>リポジトリを解析中...</p>
+        <p className={styles.loadingText}>{message}</p>
       </div>
     </div>
   );

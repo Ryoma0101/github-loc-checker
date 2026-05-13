@@ -8,16 +8,16 @@ APIによるバイト数推計ではなく、バックエンドのコンテナ�
 エンタープライズ水準のセキュリティとスケーラビリティを担保するため、認証と重いバックエンド処理を分離したアーキテクチャを採用する。
 
 * **Frontend:** Next.js (App Router)
-* **Authentication:** Firebase Authentication (GitHub Provider OAuth 2.0)
-* **Backend:** Google Cloud Run (コンテナベースのAPIサーバー)
-* **Core Tooling:** `git`, `cloc` (バックエンドコンテナ内にインストール)
+* **Authentication:** NextAuth.js (Auth.js) - GitHub Provider OAuth 2.0
+* **Backend:** Next.js API Routes (Route Handlers) + Google Cloud Run (コンテナとしてNext.jsを丸ごとデプロイ)
+* **Core Tooling:** `git`, `cloc` (コンテナ内にインストール)
 
 ## 3. 処理フロー (Data Flow)
 
 ### 3.1. 認証と認可 (Auth Flow)
 1. ユーザーがフロントエンド（Next.js）で「Login with GitHub」ボタンをクリック。
-2. Firebase Authを通じてGitHub OAuth認証を実行し、ユーザーの**アクセストークン**を取得。
-3. フロントエンドは、取得したアクセストークンをAuthorizationヘッダ（Bearer token）に付与し、Cloud RunのバックエンドAPIへリクエストを送信する。
+2. NextAuth.jsを通じてGitHub OAuth認証を実行し、ユーザーの**アクセストークン**を取得。
+3. 取得したアクセストークンはセッション内に保存され、Next.jsのAPI Routes（バックエンド）からサーバーサイドで直接読み取って利用する。
 
 ### 3.2. バックエンド解析ロジック (Backend Processing)
 Cloud Run上のAPIエンドポイントは以下の処理を行う。
@@ -46,11 +46,10 @@ Cloud Runへデプロイするための `Dockerfile` には、ベースイメー
 * `cloc`
 
 ## 6. 必要な環境変数 (Environment Variables)
-**Frontend (.env.local / Vercel):**
-* `NEXT_PUBLIC_FIREBASE_API_KEY` 等のFirebase設定一式
-* `NEXT_PUBLIC_BACKEND_API_URL` (Cloud RunのエンドポイントURL)
-
-**Firebase Console:**
-* GitHub OAuth Appの `Client ID` および `Client Secret`
+**Next.js App (.env.local / Cloud Run Secret Manager):**
+* `NEXTAUTH_URL` (アプリケーションのベースURL、例: http://localhost:3000)
+* `NEXTAUTH_SECRET` (NextAuthのセッション暗号化用ランダム文字列)
+* `GITHUB_ID` (GitHub OAuth Appの Client ID)
+* `GITHUB_SECRET` (GitHub OAuth Appの Client Secret)
 
 ---

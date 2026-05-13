@@ -1,18 +1,34 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import { signOut, useSession } from 'next-auth/react';
 import styles from '@/app/page.module.css';
 
-export function InputView({ onSubmit, loading, error }: {
+export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit, demoMode = false, onLogout }: {
   onSubmit: (username: string) => void;
   loading: boolean;
   error: string;
+  errorDetails?: string;
+  isRateLimit?: boolean;
+  demoMode?: boolean;
+  onLogout?: () => void;
 }) {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(demoMode ? 'octocat' : '');
+  const { data: session } = useSession();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) onSubmit(username.trim());
   };
+
+  const handleLogoutClick = () => {
+    if (demoMode && onLogout) {
+      onLogout();
+    } else {
+      signOut();
+    }
+  };
+
+  const logoutLabel = demoMode ? 'デモを終了' : 'ログアウト';
 
   return (
     <div className={styles.inputView}>
@@ -21,6 +37,13 @@ export function InputView({ onSubmit, loading, error }: {
           <span className={styles.logoIcon}>🌿</span>
           GitHub行数チェッカー
         </div>
+        <button 
+          className={styles.logoutButton}
+          onClick={handleLogoutClick}
+          title={logoutLabel}
+        >
+          {logoutLabel}
+        </button>
       </header>
 
       <div className={styles.inputContent}>
@@ -38,6 +61,29 @@ export function InputView({ onSubmit, loading, error }: {
           GitHubの公開リポジトリから<br />
           コード行数を算出します
         </p>
+
+        {demoMode && (
+          <div style={{
+            backgroundColor: 'rgba(100, 150, 200, 0.1)',
+            border: '1px solid rgba(100, 150, 200, 0.3)',
+            borderRadius: '8px',
+            padding: '0.9rem',
+            marginBottom: '1.5rem',
+            fontSize: '0.9rem',
+            color: 'rgba(50, 100, 150, 0.9)',
+            display: 'flex',
+            gap: '0.6rem',
+            alignItems: 'flex-start'
+          }}>
+            <span style={{ fontSize: '1rem', flexShrink: 0 }}>🎬</span>
+            <div>
+              <p style={{ fontWeight: 600, marginBottom: '0.2rem' }}>デモモード</p>
+              <p style={{ fontSize: '0.85rem', opacity: 0.9 }}>
+                これはサンプルデータです。実際の分析にはログインが必要です。
+              </p>
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} style={{ width: '100%' }}>
           <div className={styles.formGroup}>
@@ -62,7 +108,27 @@ export function InputView({ onSubmit, loading, error }: {
           </button>
         </form>
 
-        {error && <div className={styles.error}>{error}</div>}
+        {isRateLimit && error && (
+          <div style={{
+            backgroundColor: 'rgba(200, 100, 100, 0.15)',
+            border: '1px solid rgba(200, 100, 100, 0.4)',
+            borderRadius: '8px',
+            padding: '1rem',
+            marginTop: '1rem',
+            fontSize: '0.9rem',
+            color: '#c33',
+            whiteSpace: 'pre-wrap',
+            lineHeight: 1.6,
+            fontFamily: 'monospace'
+          }}>
+            <p style={{ fontWeight: 600, marginBottom: '0.8rem', fontSize: '1rem', color: '#a22' }}>
+              ⚠️ {error}
+            </p>
+            {errorDetails && <p>{errorDetails}</p>}
+          </div>
+        )}
+
+        {error && !isRateLimit && <div className={styles.error}>{error}</div>}
 
         <div className={styles.infoBox}>
           <span className={styles.infoIcon}>ℹ️</span>
@@ -82,7 +148,7 @@ export function InputView({ onSubmit, loading, error }: {
       </div>
 
       <footer className={styles.footer}>
-        © 2025 GitHub行数チェッカー
+        © 2026 GitHub行数チェッカー
       </footer>
     </div>
   );

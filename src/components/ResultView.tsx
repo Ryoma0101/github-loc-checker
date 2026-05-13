@@ -5,7 +5,7 @@ import { getLanguageColor } from '@/lib/languageIcons';
 import { LanguageIcon } from './LanguageIcon';
 import { AnalysisResult } from '@/types';
 
-export function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void }) {
+export function ResultView({ data, onBack, isDemo = false }: { data: AnalysisResult; onBack: () => void; isDemo?: boolean }) {
   const maxRepoLoc = data.repoBreakdown.length > 0 ? data.repoBreakdown[0].totalCode : 1;
 
   const now = new Date();
@@ -34,6 +34,22 @@ export function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () 
       </header>
 
       <div className={styles.resultContent}>
+        {isDemo && (
+          <div style={{
+            backgroundColor: 'rgba(100, 150, 200, 0.15)',
+            border: '1px solid rgba(100, 150, 200, 0.4)',
+            borderRadius: '8px',
+            padding: '1rem',
+            marginBottom: '1.5rem',
+            fontSize: '0.9rem',
+            color: 'rgba(50, 100, 150, 0.9)',
+            textAlign: 'center'
+          }}>
+            <p style={{ fontWeight: 600, marginBottom: '0.3rem' }}>🎬 デモモード</p>
+            <p>これはサンプルデータです。実際の分析結果を見るにはログインしてください。</p>
+          </div>
+        )}
+
         {/* User Info */}
         <div className={styles.userInfo}>
           <div className={styles.userName}>{data.username}</div>
@@ -222,7 +238,7 @@ export function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () 
       </div>
 
       <footer className={styles.footer}>
-        © 2025 GitHub行数チェッカー
+        © 2026 GitHub行数チェッカー
       </footer>
     </div>
   );

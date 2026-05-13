@@ -1,0 +1,4 @@
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=<openssl rand -base64 32 で生成>
+GITHUB_ID=<GitHub OAuth AppのClient ID>
+GITHUB_SECRET=<GitHub OAuth AppのClient Secret>

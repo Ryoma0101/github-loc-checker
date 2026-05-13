@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '../auth/[...nextauth]/route';
 import { execSync } from 'child_process';
 import { mkdtempSync, rmSync } from 'fs';
 import { join } from 'path';
@@ -22,6 +24,15 @@ interface GitHubRepo {
 }
 
 export async function GET(request: NextRequest) {
+  // セッション確認（ログイン必須）
+  const session = await getServerSession(authOptions);
+  
+  if (!session || !session.accessToken) {
+    return NextResponse.json({ error: 'ログインが必要です。GitHubでログインしてください。' }, { status: 401 });
+  }
+
+  const token = session.accessToken as string;
+
   const searchParams = request.nextUrl.searchParams;
   const username = searchParams.get('username');
 
@@ -29,15 +40,34 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'ユーザー名が必要です' }, { status: 400 });
   }
 
-  const token = process.env.GITHUB_TOKEN;
   const headers: HeadersInit = {
     Accept: 'application/vnd.github.v3+json',
     'User-Agent': 'GitHub-LOC-Estimator',
+    Authorization: `Bearer ${token}`,
   };
 
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
+  // レート制限エラーをハンドルするヘルパー関数
+  const handleRateLimitError = (response: Response) => {
+    const remaining = response.headers.get('x-ratelimit-remaining');
+    const limit = response.headers.get('x-ratelimit-limit');
+    const resetHeader = response.headers.get('x-ratelimit-reset');
+    
+    if (remaining === '0' || response.status === 403 || response.status === 429) {
+      const resetTime = resetHeader ? new Date(parseInt(resetHeader) * 1000) : null;
+      const resetTimeStr = resetTime ? resetTime.toLocaleTimeString('ja-JP') : '不明';
+      
+      return {
+        error: 'GitHub APIのレート制限に達しました。',
+        details: `
+残りリクエスト数: ${remaining || '0'}/${limit || '不明'}
+リセット時刻: ${resetTimeStr}
+
+ログインするか、${resetTimeStr}までお待ちください。`,
+        isRateLimit: true,
+      };
+    }
+    return null;
+  };
 
   try {
     // 1. Fetch all public repositories for the user (paginated)
@@ -53,6 +83,13 @@ export async function GET(request: NextRequest) {
         if (reposResponse.status === 404) {
           return NextResponse.json({ error: 'ユーザーが見つかりません' }, { status: 404 });
         }
+        
+        // レート制限エラーのチェック
+        const rateLimitError = handleRateLimitError(reposResponse);
+        if (rateLimitError) {
+          return NextResponse.json(rateLimitError, { status: 429 });
+        }
+        
         const err = await reposResponse.text();
         return NextResponse.json({ error: `GitHub API Error: ${err}` }, { status: reposResponse.status });
       }

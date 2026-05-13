@@ -22,3 +22,16 @@ export type AnalysisResult = {
   languageBreakdown: LanguageData[];
   repoBreakdown: RepoData[];
 };
+
+// NextAuth型拡張
+declare module 'next-auth' {
+  interface Session {
+    accessToken?: string;
+  }
+}
+
+declare module 'next-auth/jwt' {
+  interface JWT {
+    accessToken?: string;
+  }
+}

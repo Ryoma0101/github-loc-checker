@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Noto_Sans_JP, Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const notoSansJP = Noto_Sans_JP({ subsets: ["latin"] });
 const zenMaruGothic = Zen_Maru_Gothic({ 
@@ -25,7 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={`${notoSansJP.className} ${zenMaruGothic.variable}`}>{children}</body>
+      <body className={`${notoSansJP.className} ${zenMaruGothic.variable}`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
