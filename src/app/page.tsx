@@ -135,7 +135,7 @@ export default function Home() {
   }
 
   if (view === 'result' && data) {
-    return <ResultView data={data} onBack={handleBack} isDemo={demoMode} />;
+    return <ResultView data={data} onBack={handleBack} onSearch={handleSubmit} isDemo={demoMode} />;
   }
 
   return (

@@ -1,11 +1,13 @@
 import Image from 'next/image';
+import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import styles from '@/app/page.module.css';
 import { getLanguageColor } from '@/lib/languageIcons';
 import { LanguageIcon } from './LanguageIcon';
 import { AnalysisResult } from '@/types';
 
-export function ResultView({ data, onBack, onDemoExit, onLoginClick, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; isDemo?: boolean }) {
+export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; onSearch?: (username: string) => void; isDemo?: boolean }) {
+  const [searchUsername, setSearchUsername] = useState(data.username);
   const maxRepoLoc = data.repoBreakdown.length > 0 ? data.repoBreakdown[0].totalCode : 1;
 
   const now = new Date();
@@ -21,6 +23,14 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, isDemo = fa
     ...(otherCode > 0 ? [{ name: 'その他', value: otherCode }] : []),
   ];
 
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const trimmedUsername = searchUsername.trim();
+    if (trimmedUsername && onSearch) {
+      onSearch(trimmedUsername);
+    }
+  };
+
   return (
     <div className={styles.resultView}>
       <header className={styles.resultHeader}>
@@ -29,6 +39,21 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, isDemo = fa
           GitHub行数チェッカー
         </div>
         <div className={styles.headerActions}>
+          {!isDemo && onSearch && (
+            <form className={styles.resultSearchForm} onSubmit={handleSearchSubmit}>
+              <input
+                className={styles.resultSearchInput}
+                type="text"
+                value={searchUsername}
+                onChange={(event) => setSearchUsername(event.target.value)}
+                placeholder="次のユーザー名で検索"
+                aria-label="次の検索ユーザー名"
+              />
+              <button className={styles.resultSearchButton} type="submit">
+                検索
+              </button>
+            </form>
+          )}
           {isDemo && onLoginClick && (
             <button className={styles.githubLoginButton} onClick={onLoginClick}>
               GitHubでログイン
