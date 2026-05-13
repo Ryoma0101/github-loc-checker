@@ -1,5 +1,5 @@
 {
-  "name": "github_count",
+  "name": "github-loc-checker",
   "version": "0.1.0",
   "private": true,
   "scripts": {
