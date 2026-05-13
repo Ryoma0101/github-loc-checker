@@ -1,11 +1,12 @@
 import styles from '@/app/page.module.css';
+import { AppLogoIcon } from './Icons';
 
 export function LoadingView({ message = 'リポジトリを解析中...' }) {
   return (
     <div className={styles.loadingView}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🌿</span>
+          <AppLogoIcon className={styles.logoIconSvg} />
           GitHub行数チェッカー
         </div>
       </header>

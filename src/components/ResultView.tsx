@@ -5,6 +5,7 @@ import styles from '@/app/page.module.css';
 import { getLanguageColor } from '@/lib/languageIcons';
 import { LanguageIcon } from './LanguageIcon';
 import { AnalysisResult } from '@/types';
+import { AppLogoIcon, BackArrowIcon, DemoBadgeIcon, ExternalLinkIcon, InfoIcon } from './Icons';
 
 export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; onSearch?: (username: string) => void; isDemo?: boolean }) {
   const [searchUsername, setSearchUsername] = useState(data.username);
@@ -37,7 +38,7 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
     <div className={styles.resultView}>
       <header className={styles.resultHeader}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🌿</span>
+          <AppLogoIcon className={styles.logoIconSvg} />
           GitHub行数チェッカー
         </div>
         <div className={styles.headerActions}>
@@ -58,11 +59,12 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
           )}
           {isDemo && onLoginClick && (
             <button className={styles.githubLoginButton} onClick={onLoginClick}>
+              <ExternalLinkIcon className={styles.buttonIcon} />
               GitHubでログイン
             </button>
           )}
           <button className={styles.backButton} onClick={isDemo ? onDemoExit : onBack}>
-            {isDemo ? 'デモを終了' : '← 戻る'}
+            {isDemo ? 'デモを終了' : <><BackArrowIcon className={styles.buttonIcon} /> 戻る</>}
           </button>
         </div>
       </header>
@@ -79,7 +81,10 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
             color: 'rgba(50, 100, 150, 0.9)',
             textAlign: 'center'
           }}>
-            <p style={{ fontWeight: 600, marginBottom: '0.3rem' }}>🎬 デモモード</p>
+            <p style={{ fontWeight: 600, marginBottom: '0.3rem', display: 'flex', alignItems: 'center', gap: '0.45rem', justifyContent: 'center' }}>
+              <DemoBadgeIcon className={styles.inlineIconSmall} />
+              デモモード
+            </p>
             <p>これはサンプルデータです。実際の分析結果を見るにはログインしてください。</p>
           </div>
         )}
@@ -95,7 +100,10 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
               aria-label={`${data.username} のGitHubプロフィールを新しいタブで開く`}
             >
               <span className={styles.userName}>{data.username}</span>
-              <span className={styles.userNameExternal}>↗ GitHubで開く</span>
+              <span className={styles.userNameExternal}>
+                <ExternalLinkIcon className={styles.userNameExternalIcon} />
+                GitHubで開く
+              </span>
             </a>
           ) : (
             <div className={styles.userName}>{data.username}</div>
@@ -279,7 +287,7 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
         {/* Method Info */}
         <div className={styles.methodInfo}>
           <div className={styles.methodLeft}>
-            <span className={styles.methodIcon}>ℹ️</span>
+            <InfoIcon className={styles.methodIconSvg} />
             <div>
               <div className={styles.methodTitle}>行数の計算方法</div>
               <div className={styles.methodDesc}>

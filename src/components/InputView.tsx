@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import styles from '@/app/page.module.css';
+import { AppLogoIcon, DemoBadgeIcon, InfoIcon, SearchIcon, WarningIcon } from './Icons';
 
 export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit, demoMode = false, defaultUsername, onLoginClick, onLogout }: {
   onSubmit: (username: string) => void;
@@ -35,7 +36,7 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
     <div className={styles.inputView}>
       <header className={styles.header}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🌿</span>
+          <AppLogoIcon className={styles.logoIconSvg} />
           GitHub行数チェッカー
         </div>
         <div className={styles.headerActions}>
@@ -87,7 +88,7 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
             gap: '0.6rem',
             alignItems: 'flex-start'
           }}>
-            <span style={{ fontSize: '1rem', flexShrink: 0 }}>🎬</span>
+            <DemoBadgeIcon className={styles.inlineIcon} />
             <div>
               <p style={{ fontWeight: 600, marginBottom: '0.2rem' }}>デモモード</p>
               <p style={{ fontSize: '0.85rem', opacity: 0.9 }}>
@@ -116,7 +117,8 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
             className={styles.submitButton}
             disabled={loading || !username.trim()}
           >
-            🔍 分析する
+            <SearchIcon className={styles.buttonIcon} />
+            分析する
           </button>
         </form>
 
@@ -134,7 +136,10 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
             fontFamily: 'monospace'
           }}>
             <p style={{ fontWeight: 600, marginBottom: '0.8rem', fontSize: '1rem', color: '#a22' }}>
-              ⚠️ {error}
+              <span className={styles.alertTitle}>
+                <WarningIcon className={styles.alertIcon} />
+                {error}
+              </span>
             </p>
             {errorDetails && <p>{errorDetails}</p>}
           </div>
@@ -143,7 +148,7 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
         {error && !isRateLimit && <div className={styles.error}>{error}</div>}
 
         <div className={styles.infoBox}>
-          <span className={styles.infoIcon}>ℹ️</span>
+          <InfoIcon className={styles.infoIconSvg} />
           <div className={styles.infoText}>
             フォークしたリポジトリは除外されます<br />
             行数は cloc による解析値です（空行・コメント除外）

@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import Image from 'next/image';
 import styles from '@/app/page.module.css';
+import { AppLogoIcon, DemoBadgeIcon } from './Icons';
 
 export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
   const handleDemoClick = () => {
@@ -15,7 +16,7 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
     <div className={styles.inputView}>
       <header className={styles.header} style={{ borderBottom: 'none' }}>
         <div className={styles.logo}>
-          <span className={styles.logoIcon}>🌿</span>
+          <AppLogoIcon className={styles.logoIconSvg} />
           GitHub行数チェッカー
         </div>
       </header>
@@ -58,7 +59,7 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
           color: 'var(--foreground)'
         }}>
           <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '0.8rem' }}>
-            <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>�</span>
+            <DemoBadgeIcon className={styles.inlineIconLarge} />
             <div>
               <p style={{ fontWeight: 600, marginBottom: '0.3rem' }}>GitHubアカウント連携で実際に解析</p>
               <p style={{ opacity: 0.9 }}>
@@ -67,7 +68,7 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
             </div>
           </div>
           <div style={{ display: 'flex', gap: '0.8rem' }}>
-            <span style={{ fontSize: '1.2rem', flexShrink: 0 }}>🎬</span>
+            <DemoBadgeIcon className={styles.inlineIconLarge} />
             <div>
               <p style={{ fontWeight: 600, marginBottom: '0.3rem' }}>デモモードでUIをプレビュー</p>
               <p style={{ opacity: 0.9 }}>
@@ -148,7 +149,7 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
               e.currentTarget.style.boxShadow = 'none';
             }}
           >
-            <span style={{ fontSize: '1.1rem' }}>🎬</span>
+            <DemoBadgeIcon className={styles.inlineIcon} />
             デモを見る
           </button>
         </div>
