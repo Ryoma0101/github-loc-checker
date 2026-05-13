@@ -118,6 +118,7 @@ export default function Home() {
         errorDetails={errorDetails}
         isRateLimit={isRateLimit}
         demoMode={true}
+        defaultUsername="octocat"
         onLoginClick={handleGitHubLogin}
         onLogout={handleLogout}
       />
@@ -145,6 +146,7 @@ export default function Home() {
       errorDetails={errorDetails}
       isRateLimit={isRateLimit}
       demoMode={false}
+      defaultUsername={session?.githubUsername ?? session?.user?.name ?? ''}
       onLogout={handleLogout}
     />
   );

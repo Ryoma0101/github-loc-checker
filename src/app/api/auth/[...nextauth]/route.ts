@@ -15,16 +15,18 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, profile }) {
       // 初期ログイン時にアクセストークンをJWTに保存
       if (account) {
         token.accessToken = account.access_token;
+        token.githubUsername = (profile as { login?: string } | undefined)?.login;
       }
       return token;
     },
     async session({ session, token }) {
       // JWTからセッションオブジェクトにアクセストークンを渡す
       session.accessToken = token.accessToken as string;
+      session.githubUsername = token.githubUsername as string;
       return session;
     },
   },

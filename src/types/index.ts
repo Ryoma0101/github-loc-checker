@@ -27,11 +27,13 @@ export type AnalysisResult = {
 declare module 'next-auth' {
   interface Session {
     accessToken?: string;
+    githubUsername?: string;
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT {
     accessToken?: string;
+    githubUsername?: string;
   }
 }

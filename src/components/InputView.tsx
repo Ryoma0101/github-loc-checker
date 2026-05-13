@@ -1,20 +1,20 @@
 import { useState } from 'react';
 import Image from 'next/image';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import styles from '@/app/page.module.css';
 
-export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit, demoMode = false, onLoginClick, onLogout }: {
+export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit, demoMode = false, defaultUsername, onLoginClick, onLogout }: {
   onSubmit: (username: string) => void;
   loading: boolean;
   error: string;
   errorDetails?: string;
   isRateLimit?: boolean;
   demoMode?: boolean;
+  defaultUsername?: string;
   onLoginClick?: () => void;
   onLogout?: () => void;
 }) {
-  const [username, setUsername] = useState(demoMode ? 'octocat' : '');
-  const { data: session } = useSession();
+  const [username, setUsername] = useState(defaultUsername ?? (demoMode ? 'octocat' : ''));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
