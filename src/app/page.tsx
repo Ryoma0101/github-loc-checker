@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession, signOut, signIn } from 'next-auth/react';
 import { AnalysisResult } from '@/types';
 import { DEMO_DATA } from '@/lib/demoData';
 import { InputView } from '@/components/InputView';
@@ -27,6 +27,12 @@ export default function Home() {
 
   const handleDemoClick = () => {
     setDemoMode(true);
+  };
+
+  const handleGitHubLogin = () => {
+    localStorage.removeItem('demoMode');
+    setDemoMode(false);
+    signIn('github');
   };
 
   const handleSubmit = async (username: string) => {
@@ -101,7 +107,7 @@ export default function Home() {
   // デモモードの場合は InputView を表示
   if (demoMode) {
     if (view === 'result' && data) {
-      return <ResultView data={data} onBack={handleBack} isDemo={true} />;
+      return <ResultView data={data} onDemoExit={handleLogout} onLoginClick={handleGitHubLogin} isDemo={true} />;
     }
 
     return (
@@ -112,6 +118,7 @@ export default function Home() {
         errorDetails={errorDetails}
         isRateLimit={isRateLimit}
         demoMode={true}
+        onLoginClick={handleGitHubLogin}
         onLogout={handleLogout}
       />
     );
@@ -133,7 +140,7 @@ export default function Home() {
   return (
     <InputView 
       onSubmit={handleSubmit} 
-      loading={view === 'loading'} 
+      loading={false} 
       error={error}
       errorDetails={errorDetails}
       isRateLimit={isRateLimit}

@@ -8,6 +8,39 @@
   background: var(--card-bg);
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.githubLoginButton {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background: #24292e;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 6px 20px rgba(36, 41, 46, 0.2);
+}
+
+.githubLoginButton:hover {
+  background: #1b1f23;
+  box-shadow: 0 8px 28px rgba(36, 41, 46, 0.3);
+  transform: translateY(-1px);
+}
+
+.githubLoginButton:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(36, 41, 46, 0.18);
+}
+
 .logo {
   display: flex;
   align-items: center;

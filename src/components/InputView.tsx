@@ -3,13 +3,14 @@ import Image from 'next/image';
 import { signOut, useSession } from 'next-auth/react';
 import styles from '@/app/page.module.css';
 
-export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit, demoMode = false, onLogout }: {
+export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit, demoMode = false, onLoginClick, onLogout }: {
   onSubmit: (username: string) => void;
   loading: boolean;
   error: string;
   errorDetails?: string;
   isRateLimit?: boolean;
   demoMode?: boolean;
+  onLoginClick?: () => void;
   onLogout?: () => void;
 }) {
   const [username, setUsername] = useState(demoMode ? 'octocat' : '');
@@ -37,13 +38,24 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
           <span className={styles.logoIcon}>🌿</span>
           GitHub行数チェッカー
         </div>
-        <button 
-          className={styles.logoutButton}
-          onClick={handleLogoutClick}
-          title={logoutLabel}
-        >
-          {logoutLabel}
-        </button>
+        <div className={styles.headerActions}>
+          {demoMode && onLoginClick && (
+            <button
+              className={styles.githubLoginButton}
+              onClick={onLoginClick}
+              title="GitHubログイン"
+            >
+              GitHubでログイン
+            </button>
+          )}
+          <button 
+            className={styles.logoutButton}
+            onClick={handleLogoutClick}
+            title={logoutLabel}
+          >
+            {logoutLabel}
+          </button>
+        </div>
       </header>
 
       <div className={styles.inputContent}>

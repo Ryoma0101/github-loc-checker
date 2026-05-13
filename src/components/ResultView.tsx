@@ -5,7 +5,7 @@ import { getLanguageColor } from '@/lib/languageIcons';
 import { LanguageIcon } from './LanguageIcon';
 import { AnalysisResult } from '@/types';
 
-export function ResultView({ data, onBack, isDemo = false }: { data: AnalysisResult; onBack: () => void; isDemo?: boolean }) {
+export function ResultView({ data, onBack, onDemoExit, onLoginClick, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; isDemo?: boolean }) {
   const maxRepoLoc = data.repoBreakdown.length > 0 ? data.repoBreakdown[0].totalCode : 1;
 
   const now = new Date();
@@ -28,9 +28,16 @@ export function ResultView({ data, onBack, isDemo = false }: { data: AnalysisRes
           <span className={styles.logoIcon}>🌿</span>
           GitHub行数チェッカー
         </div>
-        <button className={styles.backButton} onClick={onBack}>
-          ← 戻る
-        </button>
+        <div className={styles.headerActions}>
+          {isDemo && onLoginClick && (
+            <button className={styles.githubLoginButton} onClick={onLoginClick}>
+              GitHubでログイン
+            </button>
+          )}
+          <button className={styles.backButton} onClick={isDemo ? onDemoExit : onBack}>
+            {isDemo ? 'デモを終了' : '← 戻る'}
+          </button>
+        </div>
       </header>
 
       <div className={styles.resultContent}>
