@@ -9,6 +9,8 @@ import { AnalysisResult } from '@/types';
 export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; onSearch?: (username: string) => void; isDemo?: boolean }) {
   const [searchUsername, setSearchUsername] = useState(data.username);
   const maxRepoLoc = data.repoBreakdown.length > 0 ? data.repoBreakdown[0].totalCode : 1;
+  const getRepoUrl = (repoName: string) => `https://github.com/${data.username}/${repoName}`;
+  const getProfileUrl = (username: string) => `https://github.com/${username}`;
 
   const now = new Date();
   const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}/${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
@@ -84,7 +86,20 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
 
         {/* User Info */}
         <div className={styles.userInfo}>
-          <div className={styles.userName}>{data.username}</div>
+          {!isDemo ? (
+            <a
+              href={getProfileUrl(data.username)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.userNameLink}
+              aria-label={`${data.username} のGitHubプロフィールを新しいタブで開く`}
+            >
+              <span className={styles.userName}>{data.username}</span>
+              <span className={styles.userNameExternal}>↗ GitHubで開く</span>
+            </a>
+          ) : (
+            <div className={styles.userName}>{data.username}</div>
+          )}
           <div className={styles.analysisDate}>分析日時: {dateStr}</div>
         </div>
 
@@ -235,7 +250,16 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
                   const barWidth = maxRepoLoc > 0 ? ((repo.totalCode / maxRepoLoc) * 100) : 0;
                   return (
                     <tr key={repo.name}>
-                      <td className={styles.repoNameCell}>{repo.name}</td>
+                      <td className={styles.repoNameCell}>
+                        <a
+                          href={getRepoUrl(repo.name)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={styles.repoLink}
+                        >
+                          {repo.name}
+                        </a>
+                      </td>
                       <td className={styles.repoLangCell}>{repo.primaryLanguage || '-'}</td>
                       <td className={styles.repoLocCell}>{repo.totalCode.toLocaleString()}</td>
                       <td className={styles.repoBarCell}>

@@ -426,6 +426,33 @@
   font-weight: 700;
 }
 
+.userNameLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 700;
+  width: fit-content;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.userNameLink:hover {
+  color: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.userNameLink:hover .userNameExternal {
+  text-decoration: underline;
+}
+
+.userNameExternal {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .analysisDate {
   font-size: 0.8rem;
   color: var(--muted);
@@ -625,6 +652,16 @@
 .repoNameCell {
   font-weight: 600;
   color: var(--foreground);
+}
+
+.repoLink {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.repoLink:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
 }
 
 .repoLangCell {
