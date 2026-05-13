@@ -21,30 +21,39 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
         </div>
       </header>
 
-      <div className={styles.inputContent} style={{ maxWidth: '520px' }}>
-        {/* Hero Image */}
-        <Image
-          src="/tree.png"
-          alt="Tree illustration"
-          width={300}
-          height={300}
-          className={styles.treeImage}
-          priority
-          style={{ marginBottom: '2rem', scale: '1.1' }}
-        />
+      <div className={styles.inputContent} style={{ maxWidth: '920px' }}>
+        {/* Hero Section with Image and Text Side by Side */}
+        <div className={styles.heroSection}>
+          {/* Hero Image */}
+          <div className={styles.heroImage}>
+            <Image
+              src="/tree.png"
+              alt="Tree illustration"
+              width={340}
+              height={340}
+              className={styles.treeImage}
+              priority
+              style={{ marginBottom: 0 }}
+            />
+          </div>
 
-        {/* Main Title */}
-        <h1 className={styles.inputTitle} style={{ fontSize: '2.2rem', marginBottom: '0.8rem' }}>
-          GitHub行数チェッカー
-        </h1>
-        
-        {/* Subtitle */}
-        <div className={styles.inputSubtitle} style={{ marginBottom: '2.5rem', fontSize: '1rem', lineHeight: 1.8 }}>
-          <p>
-            GitHubのリポジトリから実質的なコード行数を<br />
-            <strong>厳密に解析・算出</strong>します。<br />
-            <span style={{ fontSize: '0.9rem', opacity: 0.8 }}>空行やコメント除外で正確な統計を提供</span>
-          </p>
+          {/* Text Content */}
+          <div className={styles.heroText}>
+            {/* Main Title */}
+            <h1 className={styles.inputTitle} style={{ fontSize: '2.8rem', marginBottom: '1rem' }}>
+              GitHub行数<br />チェッカー
+            </h1>
+            
+            {/* Subtitle */}
+            <div className={styles.inputSubtitle} style={{ marginBottom: '2rem', fontSize: '1.05rem', lineHeight: 1.7 }}>
+              <p>
+                GitHubのリポジトリから<br />
+                <strong>実質的なコード行数を</strong><br />
+                <strong>厳密に解析・算出</strong><br />
+                <span style={{ fontSize: '0.9rem', opacity: 0.75, marginTop: '0.5rem', display: 'block' }}>空行やコメント除外で正確な統計</span>
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Info Box */}
@@ -52,13 +61,27 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
           backgroundColor: 'rgba(74, 140, 92, 0.08)',
           border: '1px solid rgba(74, 140, 92, 0.2)',
           borderRadius: '12px',
-          padding: '1.5rem',
-          marginBottom: '2.5rem',
+          padding: '1.8rem',
+          margin: '0 auto 2.5rem',
           fontSize: '0.9rem',
           lineHeight: '1.7',
-          color: 'var(--foreground)'
+          color: 'var(--foreground)',
+          width: '100%',
+          maxWidth: '720px',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '0.8rem' }}>
+          {/* Background accent */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: '3px',
+            background: 'linear-gradient(90deg, var(--primary) 0%, rgba(74, 140, 92, 0.5) 100%)'
+          }} />
+          
+          <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '1rem' }}>
             <DemoBadgeIcon className={styles.inlineIconLarge} />
             <div>
               <p style={{ fontWeight: 600, marginBottom: '0.3rem' }}>GitHubアカウント連携で実際に解析</p>
@@ -79,7 +102,7 @@ export function LoginView({ onDemoClick }: { onDemoClick?: () => void }) {
         </div>
 
         {/* CTA Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', maxWidth: '520px', margin: '0 auto' }}>
           {/* Primary Button: Login */}
           <button
             onClick={() => signIn("github")}

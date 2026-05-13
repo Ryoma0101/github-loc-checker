@@ -25,6 +25,10 @@ export default function Home() {
     setDemoMode(isDemo);
   }, []);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [view, demoMode, status]);
+
   const handleDemoClick = () => {
     setDemoMode(true);
   };

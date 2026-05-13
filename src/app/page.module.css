@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
+  padding: 1.2rem 2rem;
   border-bottom: 1px solid var(--border);
   background: var(--card-bg);
 }
@@ -90,11 +90,12 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 1.15rem;
+  gap: 0.7rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--primary);
   font-family: var(--font-zen-maru), sans-serif;
+  letter-spacing: -0.3px;
 }
 
 .logoIcon {
@@ -231,18 +232,86 @@
   align-items: center;
   flex: 1;
   padding: 2rem 2rem 3rem;
-  max-width: 460px;
+  max-width: 920px;
   width: 100%;
   position: relative;
   z-index: 1;
 }
 
-.treeImage {
-  width: 260px;
-  height: auto;
+@media (max-width: 768px) {
+  .inputContent {
+    max-width: 520px;
+    padding: 1.5rem 1.5rem 2rem;
+  }
+}
+
+/* Hero Section */
+.heroSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  width: 100%;
   margin-bottom: 1rem;
-  filter: drop-shadow(0 8px 24px rgba(74, 140, 92, 0.15));
+  position: relative;
+}
+
+.heroImage {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heroText {
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .heroSection::before {
+    display: none;
+  }
+
+  .heroImage {
+    flex: 0 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .heroText {
+    flex: 1;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.treeImage {
+  width: 340px;
+  height: auto;
+  margin-bottom: 0;
+  filter: drop-shadow(0 16px 36px rgba(74, 140, 92, 0.2));
   animation: treeSway 6s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.treeImage:hover {
+  transform: scale(1.03);
+}
+
+@media (max-width: 768px) {
+  .treeImage {
+    width: 220px;
+    height: auto;
+  }
 }
 
 @keyframes treeSway {
@@ -251,20 +320,42 @@
 }
 
 .inputTitle {
-  font-size: 1.75rem;
+  font-size: 2.8rem;
   font-weight: 800;
   text-align: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   color: var(--foreground);
   font-family: var(--font-zen-maru), sans-serif;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+
+@media (max-width: 768px) {
+  .inputTitle {
+    font-size: 1.75rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
 }
 
 .inputSubtitle {
   text-align: center;
   color: var(--muted);
-  font-size: 0.95rem;
-  margin-bottom: 2.5rem;
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
   line-height: 1.7;
+  max-width: 280px;
+}
+
+@media (max-width: 768px) {
+  .inputSubtitle {
+    text-align: center;
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+    max-width: 100%;
+  }
 }
 
 .formGroup {
