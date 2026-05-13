@@ -15,6 +15,12 @@ type ClocOutput = {
   [language: string]: ClocLanguageResult;
 };
 
+interface GitHubRepo {
+  name: string;
+  fork: boolean;
+  clone_url: string;
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const username = searchParams.get('username');
@@ -35,7 +41,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // 1. Fetch all public repositories for the user (paginated)
-    let allRepos: any[] = [];
+    let allRepos: GitHubRepo[] = [];
     let page = 1;
     while (true) {
       const reposResponse = await fetch(
@@ -59,8 +65,8 @@ export async function GET(request: NextRequest) {
     }
 
     const totalRepos = allRepos.length;
-    const forkedRepos = allRepos.filter((r: any) => r.fork);
-    const validRepos = allRepos.filter((r: any) => !r.fork);
+    const forkedRepos = allRepos.filter((r) => r.fork);
+    const validRepos = allRepos.filter((r) => !r.fork);
     const forksExcluded = forkedRepos.length;
 
     // 2. Clone each repo and run cloc
@@ -98,8 +104,9 @@ export async function GET(request: NextRequest) {
             },
           );
           clocResult = JSON.parse(clocOutput);
-        } catch {
+        } catch (clocError) {
           // cloc might fail on empty repos or binary-only repos
+          console.warn(`cloc failed or returned invalid JSON for repo ${repo.name}`, clocError);
           continue;
         }
 
