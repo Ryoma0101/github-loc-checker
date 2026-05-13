@@ -75,8 +75,8 @@ function InputView({ onSubmit, loading, error }: {
         <Image
           src="/tree.png"
           alt="Tree illustration"
-          width={180}
-          height={180}
+          width={260}
+          height={260}
           className={styles.treeImage}
           priority
         />
@@ -119,6 +119,14 @@ function InputView({ onSubmit, loading, error }: {
             行数は cloc による解析値です（空行・コメント除外）
           </div>
         </div>
+      </div>
+
+      {/* Wave decoration */}
+      <div className={styles.waveContainer}>
+        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className={styles.wave}>
+          <path d="M0,60 C240,120 480,0 720,60 C960,120 1200,0 1440,60 L1440,120 L0,120 Z" fill="rgba(74, 140, 92, 0.06)" />
+          <path d="M0,80 C360,20 720,100 1080,40 C1260,20 1380,60 1440,80 L1440,120 L0,120 Z" fill="rgba(107, 175, 123, 0.04)" />
+        </svg>
       </div>
 
       <footer className={styles.footer}>
@@ -184,31 +192,31 @@ function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void
           <div className={styles.analysisDate}>分析日時: {dateStr}</div>
         </div>
 
-        {/* Total LOC */}
-        <div className={styles.totalCard}>
-          <div className={styles.totalLeft}>
-            <div className={styles.totalLabel}>合計コード行数</div>
-            <div className={styles.totalValue}>
-              {data.totalCode.toLocaleString()}
-              <span className={styles.totalUnit}>行</span>
+        {/* Top Row: Total LOC + Stats */}
+        <div className={styles.topRow}>
+          {/* Total LOC */}
+          <div className={styles.totalCard}>
+            <div className={styles.totalLeft}>
+              <div className={styles.totalLabel}>合計コード行数</div>
+              <div className={styles.totalValue}>
+                {data.totalCode.toLocaleString()}
+                <span className={styles.totalUnit}>行</span>
+              </div>
             </div>
+            <Image
+              src="/tree.png"
+              alt="Tree"
+              width={220}
+              height={220}
+              className={styles.totalTreeImage}
+            />
           </div>
-          <Image
-            src="/tree.png"
-            alt="Tree"
-            width={120}
-            height={120}
-            className={styles.totalTreeImage}
-          />
-        </div>
 
-        {/* Stats Grid */}
-        <div className={styles.statsGrid}>
           {/* Language Chart */}
           <div className={styles.statsCard}>
             <div className={styles.statsCardTitle}>言語別の割合</div>
             <div className={styles.chartArea}>
-              <div style={{ width: 100, height: 100 }}>
+              <div style={{ width: 90, height: 90 }}>
                 <ResponsiveContainer>
                   <PieChart>
                     <Pie
@@ -217,8 +225,8 @@ function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void
                       nameKey="name"
                       cx="50%"
                       cy="50%"
-                      innerRadius={25}
-                      outerRadius={45}
+                      innerRadius={22}
+                      outerRadius={40}
                       paddingAngle={2}
                       stroke="none"
                     >
@@ -233,7 +241,7 @@ function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void
                 {chartData.map((item) => (
                   <div key={item.name} className={styles.legendItem}>
                     <span className={styles.legendColor} style={{ backgroundColor: getLanguageColor(item.name) }} />
-                    <LanguageIcon name={item.name} size={14} />
+                    <LanguageIcon name={item.name} size={12} />
                     {item.name}
                     <span className={styles.legendPercent}>
                       {totalLangCode > 0 ? ((item.value / totalLangCode) * 100).toFixed(1) : 0}%
@@ -244,22 +252,16 @@ function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void
             </div>
           </div>
 
-          {/* Repo Count */}
-          <div className={styles.statsCard}>
-            <div className={styles.statsCardTitle}>リポジトリ数</div>
-            <div className={styles.repoCountValue}>
-              {data.totalReposAnalyzed}
-              <span className={styles.repoCountUnit}>件</span>
-            </div>
-            <div className={styles.repoCountSubtext}>（フォーク除外）</div>
-          </div>
-
-          {/* Analysis Target */}
+          {/* Repo Count + Analysis Target combined */}
           <div className={styles.statsCard}>
             <div className={styles.statsCardTitle}>分析の対象</div>
             <div className={styles.targetList}>
               <div className={styles.targetItem}>
-                <span className={styles.targetLabel}>パブリックリポジトリ</span>
+                <span className={styles.targetLabel}>解析リポジトリ</span>
+                <span className={styles.targetValue}>{data.totalReposAnalyzed} 件</span>
+              </div>
+              <div className={styles.targetItem}>
+                <span className={styles.targetLabel}>パブリック合計</span>
                 <span className={styles.targetValue}>{data.totalRepos} 件</span>
               </div>
               <div className={styles.targetItem}>
@@ -270,87 +272,88 @@ function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void
           </div>
         </div>
 
-        {/* Language Totals Table */}
-        <div className={styles.repoSection}>
-          <div className={styles.repoSectionTitle}>
-            言語別の合計行数
+        {/* Two-column: Language Table + Repo Table */}
+        <div className={styles.twoColumnGrid}>
+          {/* Language Totals Table */}
+          <div className={styles.repoSection}>
+            <div className={styles.repoSectionTitle}>
+              言語別の合計行数
+            </div>
+            <table className={styles.repoTable}>
+              <thead>
+                <tr>
+                  <th>言語</th>
+                  <th style={{ textAlign: 'right' }}>コード</th>
+                  <th style={{ textAlign: 'right' }}>コメント</th>
+                  <th style={{ textAlign: 'right' }}>空行</th>
+                  <th>割合</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.languageBreakdown.map((lang, i) => {
+                  const percent = totalLangCode > 0 ? ((lang.code / totalLangCode) * 100) : 0;
+                  const barWidth = data.languageBreakdown.length > 0 && data.languageBreakdown[0].code > 0
+                    ? ((lang.code / data.languageBreakdown[0].code) * 100) : 0;
+                  return (
+                    <tr key={lang.name}>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                          <span className={styles.legendColor} style={{ backgroundColor: getLanguageColor(lang.name) }} />
+                          <LanguageIcon name={lang.name} size={16} />
+                          <span className={styles.repoNameCell}>{lang.name}</span>
+                        </div>
+                      </td>
+                      <td className={styles.repoLocCell}>{lang.code.toLocaleString()}</td>
+                      <td className={styles.repoLocCell} style={{ color: 'var(--muted)' }}>{lang.comment.toLocaleString()}</td>
+                      <td className={styles.repoLocCell} style={{ color: 'var(--muted)' }}>{lang.blank.toLocaleString()}</td>
+                      <td className={styles.repoBarCell}>
+                        <div className={styles.repoBar}>
+                          <div className={styles.repoBarFill} style={{ width: `${barWidth}%` }} />
+                        </div>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>{percent.toFixed(1)}%</span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <table className={styles.repoTable}>
-            <thead>
-              <tr>
-                <th>言語</th>
-                <th style={{ textAlign: 'right' }}>コード行数</th>
-                <th style={{ textAlign: 'right' }}>コメント行</th>
-                <th style={{ textAlign: 'right' }}>空行</th>
-                <th style={{ textAlign: 'right' }}>ファイル数</th>
-                <th>割合</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.languageBreakdown.map((lang, i) => {
-                const percent = totalLangCode > 0 ? ((lang.code / totalLangCode) * 100) : 0;
-                const barWidth = data.languageBreakdown.length > 0 && data.languageBreakdown[0].code > 0
-                  ? ((lang.code / data.languageBreakdown[0].code) * 100) : 0;
-                return (
-                  <tr key={lang.name}>
-                    <td>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span className={styles.legendColor} style={{ backgroundColor: getLanguageColor(lang.name) }} />
-                        <LanguageIcon name={lang.name} size={18} />
-                        <span className={styles.repoNameCell}>{lang.name}</span>
-                      </div>
-                    </td>
-                    <td className={styles.repoLocCell}>{lang.code.toLocaleString()}</td>
-                    <td className={styles.repoLocCell} style={{ color: 'var(--muted)' }}>{lang.comment.toLocaleString()}</td>
-                    <td className={styles.repoLocCell} style={{ color: 'var(--muted)' }}>{lang.blank.toLocaleString()}</td>
-                    <td className={styles.repoLocCell} style={{ color: 'var(--muted)' }}>{lang.nFiles.toLocaleString()}</td>
-                    <td className={styles.repoBarCell}>
-                      <div className={styles.repoBar}>
-                        <div className={styles.repoBarFill} style={{ width: `${barWidth}%` }} />
-                      </div>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{percent.toFixed(1)}%</span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
 
-        {/* Repo Table (Top 10) */}
-        <div className={styles.repoSection}>
-          <div className={styles.repoSectionTitle}>
-            リポジトリ別のコード行数（上位{Math.min(data.repoBreakdown.length, 10)}件）
+          {/* Repo Table (Top 10) */}
+          <div className={styles.repoSection}>
+            <div className={styles.repoSectionTitle}>
+              リポジトリ別（上位{Math.min(data.repoBreakdown.length, 10)}件）
+            </div>
+            <table className={styles.repoTable}>
+              <thead>
+                <tr>
+                  <th>リポジトリ名</th>
+                  <th>主要言語</th>
+                  <th style={{ textAlign: 'right' }}>行数</th>
+                  <th>割合</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.repoBreakdown.slice(0, 10).map((repo) => {
+                  const percent = data.totalCode > 0 ? ((repo.totalCode / data.totalCode) * 100) : 0;
+                  const barWidth = maxRepoLoc > 0 ? ((repo.totalCode / maxRepoLoc) * 100) : 0;
+                  return (
+                    <tr key={repo.name}>
+                      <td className={styles.repoNameCell}>{repo.name}</td>
+                      <td className={styles.repoLangCell}>{repo.primaryLanguage || '-'}</td>
+                      <td className={styles.repoLocCell}>{repo.totalCode.toLocaleString()}</td>
+                      <td className={styles.repoBarCell}>
+                        <div className={styles.repoBar}>
+                          <div className={styles.repoBarFill} style={{ width: `${barWidth}%` }} />
+                        </div>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--muted)' }}>{percent.toFixed(1)}%</span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
-          <table className={styles.repoTable}>
-            <thead>
-              <tr>
-                <th>リポジトリ名</th>
-                <th>主要言語</th>
-                <th style={{ textAlign: 'right' }}>コード行数</th>
-                <th>割合</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.repoBreakdown.slice(0, 10).map((repo) => {
-                const percent = data.totalCode > 0 ? ((repo.totalCode / data.totalCode) * 100) : 0;
-                const barWidth = maxRepoLoc > 0 ? ((repo.totalCode / maxRepoLoc) * 100) : 0;
-                return (
-                  <tr key={repo.name}>
-                    <td className={styles.repoNameCell}>{repo.name}</td>
-                    <td className={styles.repoLangCell}>{repo.primaryLanguage || '-'}</td>
-                    <td className={styles.repoLocCell}>{repo.totalCode.toLocaleString()}</td>
-                    <td className={styles.repoBarCell}>
-                      <div className={styles.repoBar}>
-                        <div className={styles.repoBarFill} style={{ width: `${barWidth}%` }} />
-                      </div>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>{percent.toFixed(1)}%</span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
         </div>
 
         {/* Method Info */}
