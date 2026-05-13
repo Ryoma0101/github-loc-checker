@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import { Noto_Sans_JP } from "next/font/google";
+import { Noto_Sans_JP, Zen_Maru_Gothic } from "next/font/google";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({ subsets: ["latin"] });
+const zenMaruGothic = Zen_Maru_Gothic({ 
+  weight: ["500", "700", "900"], 
+  subsets: ["latin"], 
+  variable: '--font-zen-maru' 
+});
 
 export const metadata: Metadata = {
-  title: "GitHub LOC Estimator",
-  description: "GitHubの公開リポジトリから概算のコード行数を算出します。",
+  title: "GitHub行数チェッカー",
+  description: "GitHubの公開リポジトリからコード行数を算出します。",
 };
 
 export default function RootLayout({
@@ -16,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className={notoSansJP.className}>{children}</body>
+      <body className={`${notoSansJP.className} ${zenMaruGothic.variable}`}>{children}</body>
     </html>
   );
 }

@@ -67,7 +67,7 @@ function InputView({ onSubmit, loading, error }: {
       <header className={styles.header}>
         <div className={styles.logo}>
           <span className={styles.logoIcon}>🌿</span>
-          GitHub LOC Estimator
+          GitHub行数チェッカー
         </div>
       </header>
 
@@ -81,7 +81,7 @@ function InputView({ onSubmit, loading, error }: {
           priority
         />
 
-        <h1 className={styles.inputTitle}>GitHub LOC Estimator</h1>
+        <h1 className={styles.inputTitle}>GitHub行数チェッカー</h1>
         <p className={styles.inputSubtitle}>
           GitHubの公開リポジトリから<br />
           コード行数を算出します
@@ -178,7 +178,7 @@ function ResultView({ data, onBack }: { data: AnalysisResult; onBack: () => void
       <header className={styles.resultHeader}>
         <div className={styles.logo}>
           <span className={styles.logoIcon}>🌿</span>
-          GitHub LOC Estimator
+          GitHub行数チェッカー
         </div>
         <button className={styles.backButton} onClick={onBack}>
           ← 戻る
