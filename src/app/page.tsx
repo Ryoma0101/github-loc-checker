@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { useSession, signOut, signIn } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { AnalysisResult } from '@/types';
 import { DEMO_DATA } from '@/lib/demoData';
 import { InputView } from '@/components/InputView';
@@ -21,8 +21,11 @@ export default function Home() {
 
   // デモモード判定
   useEffect(() => {
-    const isDemo = localStorage.getItem('demoMode') === 'true';
-    setDemoMode(isDemo);
+    const timer = setTimeout(() => {
+      const isDemo = localStorage.getItem('demoMode') === 'true';
+      setDemoMode(isDemo);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
