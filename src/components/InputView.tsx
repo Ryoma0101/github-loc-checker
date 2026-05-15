@@ -22,10 +22,14 @@ export function InputView({ onSubmit, loading, error, errorDetails, isRateLimit,
     if (username.trim()) onSubmit(username.trim());
   };
 
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     if (demoMode && onLogout) {
       onLogout();
     } else {
+      // GitHubトークンを失効させてからサインアウト
+      try {
+        await fetch('/api/auth/revoke', { method: 'POST' });
+      } catch { /* 失効失敗してもログアウトは続行 */ }
       signOut();
     }
   };

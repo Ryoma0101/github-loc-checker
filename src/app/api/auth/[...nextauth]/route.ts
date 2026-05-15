@@ -8,8 +8,8 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_SECRET as string,
       authorization: {
         params: {
-          // GitHub APIでリポジトリ情報にアクセスするために必要なスコープ
-          scope: "read:user user:email repo",
+          // パブリックリポジトリの読み取りとユーザー情報のみ（最小権限）
+          scope: "read:user public_repo",
         },
       },
     }),
