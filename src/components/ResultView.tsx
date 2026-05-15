@@ -6,9 +6,11 @@ import { getLanguageColor } from '@/lib/languageIcons';
 import { LanguageIcon } from './LanguageIcon';
 import { AnalysisResult } from '@/types';
 import { AppLogoIcon, BackArrowIcon, DemoBadgeIcon, ExternalLinkIcon, InfoIcon } from './Icons';
+import { ShareModal } from './ShareModal';
 
 export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; onSearch?: (username: string) => void; isDemo?: boolean }) {
   const [searchUsername, setSearchUsername] = useState(data.username);
+  const [showShareModal, setShowShareModal] = useState(false);
   const maxRepoLoc = data.repoBreakdown.length > 0 ? data.repoBreakdown[0].totalCode : 1;
   const getRepoUrl = (repoName: string) => `https://github.com/${data.username}/${repoName}`;
   const getProfileUrl = (username: string) => `https://github.com/${username}`;
@@ -299,7 +301,31 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
             </div>
           </div>
         </div>
+
+        {/* Share Button */}
+        <div className={styles.shareSection}>
+          <button
+            className={styles.shareOpenButton}
+            onClick={() => setShowShareModal(true)}
+            id="share-button"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" className={styles.buttonIcon}>
+              <circle cx="18" cy="5" r="3" stroke="currentColor" strokeWidth="1.7" />
+              <circle cx="6" cy="12" r="3" stroke="currentColor" strokeWidth="1.7" />
+              <circle cx="18" cy="19" r="3" stroke="currentColor" strokeWidth="1.7" />
+              <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" stroke="currentColor" strokeWidth="1.7" />
+            </svg>
+            結果をシェアする
+          </button>
+        </div>
       </div>
+
+      {/* Share Modal */}
+      <ShareModal
+        data={data}
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
+      />
 
       <footer className={styles.footer}>
         © 2026 GitHub行数チェッカー

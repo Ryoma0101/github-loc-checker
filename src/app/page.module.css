@@ -935,3 +935,229 @@
   color: #c33;
 }
 
+/* ===== SHARE SECTION ===== */
+.shareSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.shareOpenButton {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2.2rem;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #4a8c5c 0%, #3a7049 100%);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(74, 140, 92, 0.25);
+  letter-spacing: 0.3px;
+}
+
+.shareOpenButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(74, 140, 92, 0.35);
+  background: linear-gradient(135deg, #5a9c6c 0%, #4a8c5c 100%);
+}
+
+.shareOpenButton:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(74, 140, 92, 0.2);
+}
+
+/* ===== SHARE MODAL OVERLAY ===== */
+.shareOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: overlayFadeIn 0.2s ease;
+  padding: 1rem;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.shareModal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.shareModalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem 0.75rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.shareModalTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.shareModalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.15s;
+}
+
+.shareModalClose:hover {
+  background: #f5f5f5;
+  color: #1a1a1a;
+}
+
+/* Share Image Preview */
+.shareImagePreview {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.shareImage {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.shareImageLoading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.shareSpinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e8f5e9;
+  border-top-color: #4a8c5c;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Share Action Buttons */
+.shareButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.5rem 1.5rem 1.5rem;
+}
+
+.shareButtonX,
+.shareButtonInsta,
+.shareButtonDownload {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.2px;
+}
+
+/* X (Twitter) Button */
+.shareButtonX {
+  background: #0f1419;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(15, 20, 25, 0.2);
+}
+
+.shareButtonX:hover {
+  background: #1d2731;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(15, 20, 25, 0.28);
+}
+
+/* Instagram Button */
+.shareButtonInsta {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(220, 39, 67, 0.25);
+}
+
+.shareButtonInsta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(220, 39, 67, 0.35);
+  filter: brightness(1.08);
+}
+
+/* Download Button */
+.shareButtonDownload {
+  background: #fff;
+  color: #1a1a1a;
+  border: 1.5px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.shareButtonDownload:hover {
+  background: #fafafa;
+  border-color: #4a8c5c;
+  color: #4a8c5c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(74, 140, 92, 0.12);
+}
+
+/* Mobile responsive for share modal */
+@media (max-width: 600px) {
+  .shareModal {
+    max-width: 100%;
+    border-radius: 16px;
+  }
+
+  .shareImagePreview {
+    padding: 1rem;
+  }
+
+  .shareButtons {
+    padding: 0.5rem 1rem 1.25rem;
+  }
+}
+
