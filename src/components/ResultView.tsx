@@ -296,7 +296,7 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
                 各リポジトリを cloc で解析し、空行・コメントを除いた純粋なコード行数を算出しています。
               </div>
               <div className={styles.methodDesc} style={{ marginTop: '0.25rem' }}>
-                除外: JSON, YAML, Markdown, CSV, SVG, Jupyter Notebook
+                除外: JSON, YAML, Markdown, CSV, SVG, XML, INI, Makefile, Dockerfile, CMake, Text, TOML, Properties, Jupyter Notebook, および一部の設定ファイル
               </div>
             </div>
           </div>

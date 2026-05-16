@@ -133,7 +133,7 @@ export async function GET(request: NextRequest) {
         let clocResult: ClocOutput;
         try {
           const clocOutput = execSync(
-            `cloc "${tmpDir}/repo" --json --quiet --exclude-dir=node_modules,dist,build,.next,out,vendor,__pycache__,.venv,venv --exclude-lang="Jupyter Notebook",JSON,YAML,Markdown,CSV,SVG`,
+            `cloc "${tmpDir}/repo" --json --quiet --exclude-dir=node_modules,dist,build,.next,out,vendor,__pycache__,.venv,venv --exclude-lang="Jupyter Notebook",JSON,YAML,Markdown,CSV,SVG,XML,INI,make,Dockerfile,CMake,Text,TOML,Properties,ignore`,
             {
               timeout: 60000,
               stdio: 'pipe',
@@ -149,37 +149,46 @@ export async function GET(request: NextRequest) {
 
         // Process cloc output
         let repoTotalCode = 0;
-        const repoLanguages: Array<{ name: string; code: number; blank: number; comment: number; nFiles: number }> = [];
-        let maxCode = 0;
-        let primaryLanguage = '';
+        const repoLangsMap: Record<string, { code: number; blank: number; comment: number; nFiles: number }> = {};
 
         for (const [lang, stats] of Object.entries(clocResult)) {
           if (lang === 'header' || lang === 'SUM') continue;
 
+          // 言語名の正規化 (JS/TSとJSX/TSXを分ける)
+          let normalizedLang = lang;
+          if (lang === 'TypeScript React') normalizedLang = 'TSX';
+
           const langStats = stats as ClocLanguageResult;
           repoTotalCode += langStats.code;
 
-          repoLanguages.push({
-            name: lang,
-            code: langStats.code,
-            blank: langStats.blank,
-            comment: langStats.comment,
-            nFiles: langStats.nFiles,
-          });
-
-          if (langStats.code > maxCode) {
-            maxCode = langStats.code;
-            primaryLanguage = lang;
+          if (!repoLangsMap[normalizedLang]) {
+            repoLangsMap[normalizedLang] = { code: 0, blank: 0, comment: 0, nFiles: 0 };
           }
+          repoLangsMap[normalizedLang].code += langStats.code;
+          repoLangsMap[normalizedLang].blank += langStats.blank;
+          repoLangsMap[normalizedLang].comment += langStats.comment;
+          repoLangsMap[normalizedLang].nFiles += langStats.nFiles;
 
           // Accumulate totals
-          if (!languageTotals[lang]) {
-            languageTotals[lang] = { code: 0, blank: 0, comment: 0, nFiles: 0 };
+          if (!languageTotals[normalizedLang]) {
+            languageTotals[normalizedLang] = { code: 0, blank: 0, comment: 0, nFiles: 0 };
           }
-          languageTotals[lang].code += langStats.code;
-          languageTotals[lang].blank += langStats.blank;
-          languageTotals[lang].comment += langStats.comment;
-          languageTotals[lang].nFiles += langStats.nFiles;
+          languageTotals[normalizedLang].code += langStats.code;
+          languageTotals[normalizedLang].blank += langStats.blank;
+          languageTotals[normalizedLang].comment += langStats.comment;
+          languageTotals[normalizedLang].nFiles += langStats.nFiles;
+        }
+
+        let maxCode = 0;
+        let primaryLanguage = '';
+        const repoLanguages = [];
+
+        for (const [name, stats] of Object.entries(repoLangsMap)) {
+          repoLanguages.push({ name, ...stats });
+          if (stats.code > maxCode) {
+            maxCode = stats.code;
+            primaryLanguage = name;
+          }
         }
 
         if (repoTotalCode > 0) {
