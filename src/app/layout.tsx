@@ -13,10 +13,6 @@ const zenMaruGothic = Zen_Maru_Gothic({
 export const metadata: Metadata = {
   title: "GitHub行数チェッカー",
   description: "GitHubの公開リポジトリからコード行数を算出します。",
-  icons: {
-    icon: "/icon.png",
-    apple: "/icon.png",
-  },
 };
 
 export default function RootLayout({
