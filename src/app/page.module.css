@@ -14,6 +14,35 @@
   gap: 0.5rem;
 }
 
+.mobileMenuWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.mobileMenuButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.mobileMenuButton:hover {
+  background: var(--primary-pale);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.mobileMenuIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
 .resultSearchForm {
   display: flex;
   align-items: stretch;
@@ -556,6 +585,75 @@
   background: var(--card-bg);
   position: relative;
   z-index: 1;
+}
+
+.resultLogo {
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .resultHeader {
+    padding: 0.75rem 1rem;
+  }
+
+  .resultLogo {
+    gap: 0.45rem;
+    min-width: 0;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .resultLogo .logoIconSvg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .mobileMenuWrapper {
+    position: relative;
+  }
+
+  .mobileMenuButton {
+    display: inline-flex;
+  }
+
+  .headerActions {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    right: 0;
+    min-width: 260px;
+    padding: 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card-bg);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.09);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    z-index: 20;
+  }
+
+  .headerActionsOpen {
+    display: flex;
+  }
+
+  .resultSearchForm {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .resultSearchInput {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .resultSearchButton,
+  .githubLoginButton,
+  .backButton {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .resultContent {
@@ -1160,4 +1258,3 @@
     padding: 0.5rem 1rem 1.25rem;
   }
 }
-

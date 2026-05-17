@@ -73,3 +73,11 @@ export function BackArrowIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+export function HamburgerIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="none">
+      <path d="M5 7.5h14M5 12h14M5 16.5h14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
