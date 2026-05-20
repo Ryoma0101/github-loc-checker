@@ -5,12 +5,13 @@ import styles from '@/app/page.module.css';
 import { getLanguageColor } from '@/lib/languageIcons';
 import { LanguageIcon } from './LanguageIcon';
 import { AnalysisResult } from '@/types';
-import { AppLogoIcon, BackArrowIcon, DemoBadgeIcon, ExternalLinkIcon, InfoIcon } from './Icons';
+import { AppLogoIcon, BackArrowIcon, DemoBadgeIcon, ExternalLinkIcon, HamburgerIcon, InfoIcon } from './Icons';
 import { ShareModal } from './ShareModal';
 
 export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, isDemo = false }: { data: AnalysisResult; onBack?: () => void; onDemoExit?: () => void; onLoginClick?: () => void; onSearch?: (username: string) => void; isDemo?: boolean }) {
   const [searchUsername, setSearchUsername] = useState(data.username);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showHeaderMenu, setShowHeaderMenu] = useState(false);
   const maxRepoLoc = data.repoBreakdown.length > 0 ? data.repoBreakdown[0].totalCode : 1;
   const getRepoUrl = (repoName: string) => `https://github.com/${data.username}/${repoName}`;
   const getProfileUrl = (username: string) => `https://github.com/${username}`;
@@ -33,41 +34,69 @@ export function ResultView({ data, onBack, onDemoExit, onLoginClick, onSearch, i
     const trimmedUsername = searchUsername.trim();
     if (trimmedUsername && onSearch) {
       onSearch(trimmedUsername);
+      setShowHeaderMenu(false);
     }
   };
 
   return (
     <div className={styles.resultView}>
       <header className={styles.resultHeader}>
-        <div className={styles.logo}>
+        <div className={`${styles.logo} ${styles.resultLogo}`}>
           <AppLogoIcon className={styles.logoIconSvg} />
           GitHub行数チェッカー
         </div>
-        <div className={styles.headerActions}>
-          {!isDemo && onSearch && (
-            <form className={styles.resultSearchForm} onSubmit={handleSearchSubmit}>
-              <input
-                className={styles.resultSearchInput}
-                type="text"
-                value={searchUsername}
-                onChange={(event) => setSearchUsername(event.target.value)}
-                placeholder="次のユーザー名で検索"
-                aria-label="次の検索ユーザー名"
-              />
-              <button className={styles.resultSearchButton} type="submit">
-                検索
-              </button>
-            </form>
-          )}
-          {isDemo && onLoginClick && (
-            <button className={styles.githubLoginButton} onClick={onLoginClick}>
-              <ExternalLinkIcon className={styles.buttonIcon} />
-              GitHubでログイン
-            </button>
-          )}
-          <button className={styles.backButton} onClick={isDemo ? onDemoExit : onBack}>
-            {isDemo ? 'デモを終了' : <><BackArrowIcon className={styles.buttonIcon} /> 戻る</>}
+        <div className={styles.mobileMenuWrapper}>
+          <button
+            className={styles.mobileMenuButton}
+            type="button"
+            onClick={() => setShowHeaderMenu((open) => !open)}
+            aria-label="ヘッダーメニューを開閉"
+            aria-expanded={showHeaderMenu}
+          >
+            <HamburgerIcon className={styles.mobileMenuIcon} />
           </button>
+          <div className={`${styles.headerActions} ${showHeaderMenu ? styles.headerActionsOpen : ''}`}>
+            {!isDemo && onSearch && (
+              <form className={styles.resultSearchForm} onSubmit={handleSearchSubmit}>
+                <input
+                  className={styles.resultSearchInput}
+                  type="text"
+                  value={searchUsername}
+                  onChange={(event) => setSearchUsername(event.target.value)}
+                  placeholder="次のユーザー名で検索"
+                  aria-label="次の検索ユーザー名"
+                />
+                <button className={styles.resultSearchButton} type="submit">
+                  検索
+                </button>
+              </form>
+            )}
+            {isDemo && onLoginClick && (
+              <button
+                className={styles.githubLoginButton}
+                onClick={() => {
+                  setShowHeaderMenu(false);
+                  onLoginClick();
+                }}
+              >
+                <ExternalLinkIcon className={styles.buttonIcon} />
+                GitHubでログイン
+              </button>
+            )}
+            <button
+              className={styles.backButton}
+              onClick={() => {
+                setShowHeaderMenu(false);
+                if (isDemo) {
+                  onDemoExit?.();
+                  return;
+                }
+                onBack?.();
+              }}
+            >
+              {isDemo ? 'デモを終了' : <><BackArrowIcon className={styles.buttonIcon} /> 戻る</>}
+            </button>
+          </div>
         </div>
       </header>
 
